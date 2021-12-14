@@ -7,14 +7,14 @@ import (
 )
 
 const (
-	GroupName = "hliangzhao.cn"
-	Version = "v1alpha1"
+	GroupName = "hliangzhao.io"
+	Version   = "v1alpha1"
 )
 
 var (
 	SchemeGroupVersion = schema.GroupVersion{Group: GroupName, Version: Version}
 	// SchemeBuilder register the go types Balancer and BalancerList to Kubernetes GroupVersionKinds
-	SchemeBuilder = runtime.NewSchemeBuilder(addKnownTypes)
+	SchemeBuilder      = runtime.NewSchemeBuilder(addKnownTypes)
 	// AddToScheme applies all the stored functions to the scheme
 	AddToScheme = SchemeBuilder.AddToScheme
 )

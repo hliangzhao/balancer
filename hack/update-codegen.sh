@@ -28,16 +28,11 @@ SCRIPT_ROOT=$(unset CDPATH && cd $(dirname "${BASH_SOURCE[0]}")/.. && pwd)
 # --output-base    because this script should also be able to run inside the vendor dir of
 #                  k8s.io/kubernetes. The output-base is needed for the generators to output into the vendor dir
 #                  instead of the $GOPATH directly. For normal projects this can be dropped.
-bash ${SCRIPT_ROOT}/hack/generate-groups.sh "all" \
+bash ${SCRIPT_ROOT}/hack/generate-groups.sh "deepcopy,client,informer,lister" \
   github.com/hliangzhao/balancer/pkg/client github.com/hliangzhao/balancer/pkg/apis \
   "balancer:v1alpha1" \
   --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.go.txt
 
-echo "--------------------"
+echo "done"
 
-bash ${SCRIPT_ROOT}/hack/generate-internal-groups.sh "all" \
-  github.com/hliangzhao/balancer/pkg/apis github.com/hliangzhao/balancer/pkg/apis github.com/hliangzhao/balancer/pkg/apis \
-  "balancer:v1alpha1" \
-  --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.go.txt
-
-# TODO: defaults和openapi文件没有正确生成，检查！
+## TODO: How to generate zz_generated.defaults.go and zz_generated.openapi/go and is it necessary?

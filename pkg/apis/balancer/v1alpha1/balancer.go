@@ -61,7 +61,7 @@ type BalancerStatus struct {
 	ObsoleteBackendsNum int32 `json:"obsoleteBackendsNum,omitempty"`
 }
 
-// Balancer is the Schema for the Balancer api.
+// Balancer is the Schema for the balancer api.
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +genclient
 // +k8s:openapi-gen=true
@@ -77,8 +77,8 @@ type Balancer struct {
 // BalancerList contains a list of Balancer.
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type BalancerList struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
 
 	Items []Balancer `json:"items"`
 }
