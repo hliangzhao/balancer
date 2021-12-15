@@ -28,8 +28,7 @@ func (r *ReconcileBalancer) syncService(balancer *balancerv1alpha1.Balancer) err
 	err = r.client.Get(context.Background(), types.NamespacedName{Namespace: svc.Namespace, Name: svc.Name}, found)
 	if err != nil && errors.IsNotFound(err) {
 		// corresponding service not found in the cluster, create it with the newest svc
-		err = r.client.Create(context.Background(), svc)
-		if err != nil {
+		if err = r.client.Create(context.Background(), svc); err != nil {
 			return err
 		}
 		return nil
