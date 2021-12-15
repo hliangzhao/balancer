@@ -20,7 +20,8 @@ set -o pipefail
 
 echo $(dirname "${BASH_SOURCE[0]}")
 
-echo 'For install generated codes at right position, the project root should be GOPATH/src'
+echo "For install generated codes at right position, the project root should be GOPATH/src."
+echo "Or you need to manually copy the generated code to the right place."
 
 SCRIPT_ROOT=$(unset CDPATH && cd $(dirname "${BASH_SOURCE[0]}")/.. && pwd)
 
