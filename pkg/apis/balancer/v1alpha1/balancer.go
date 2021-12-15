@@ -52,6 +52,7 @@ type BalancerSpec struct {
 }
 
 // BalancerStatus defines the actual status of Balancer.
+// TODO: could add more fields
 // +k8s:openapi-gen=true
 type BalancerStatus struct {
 	// +optional
@@ -70,7 +71,7 @@ type BalancerStatus struct {
 //  name: example-balancer
 // spec:
 //  ports:
-//    # each port will exposed with a Service
+//    # all the ports will be exposed with a Service
 //    - name: http
 //      protocol: TCP
 //      port: 80
@@ -79,6 +80,7 @@ type BalancerStatus struct {
 //    app: test
 //  backends:
 //    # each backend is a Pod that can handle the input load
+//    # a service will also be created for each backend
 //    - name: v1
 //      weight: 90
 //      selector:
