@@ -21,10 +21,10 @@ type BalancerPort struct {
 	// +optional
 	Protocol Protocol `json:"protocol,omitempty"` // default is TCP
 
-	// the port that will be exposed
+	// the port that will be exposed by the balancer
 	Port Port `json:"port"`
 
-	// the port that will be mapped onto the node
+	// the port that used by the container
 	// +optional
 	TargetPort intstr.IntOrString `json:"targetPort,omitempty"`
 }
@@ -62,6 +62,32 @@ type BalancerStatus struct {
 }
 
 // Balancer is the Schema for the balancer api.
+// Example:
+// ==============================
+// apiVersion: hliangzhao.io/v1alpha1
+// kind: Balancer
+// metadata:
+//  name: example-balancer
+// spec:
+//  ports:
+//    # each port will exposed with a Service
+//    - name: http
+//      protocol: TCP
+//      port: 80
+//      targetPort: 5678
+//  selector:
+//    app: test
+//  backends:
+//    # each backend is a Pod that can handle the input load
+//    - name: v1
+//      weight: 90
+//      selector:
+//        version: v1
+//    - name: v2
+//      weight: 9
+//      selector:
+//        version: v2
+// ==============================
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +genclient
 // +k8s:openapi-gen=true
