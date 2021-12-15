@@ -70,6 +70,7 @@ type BalancerStatus struct {
 //  name: example-balancer
 // spec:
 //  ports:
+//    # each port will exposed with a Service
 //    - name: http
 //      protocol: TCP
 //      port: 80
@@ -77,6 +78,7 @@ type BalancerStatus struct {
 //  selector:
 //    app: test
 //  backends:
+//    # each backend is a Pod that can handle the input load
 //    - name: v1
 //      weight: 90
 //      selector:
