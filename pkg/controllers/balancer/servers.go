@@ -111,7 +111,6 @@ func (r *ReconcileBalancer) syncServers(balancer *balancerv1alpha1.Balancer) err
 }
 
 // groupServers gets services to created from current balancer and divided current services into active and to-be-deleted.
-// TODO: servicesToCreate is not necessary?
 func groupServers(balancer *balancerv1alpha1.Balancer, services []corev1.Service) (servicesToCreate []corev1.Service,
 	servicesToDelete []corev1.Service, activeServices []corev1.Service) {
 

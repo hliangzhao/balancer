@@ -24,7 +24,7 @@ type ReconcileBalancer struct {
 	scheme *runtime.Scheme
 }
 
-// newReconciler creates the ReconcileBalancer with input manager.
+// newReconciler creates the ReconcileBalancer with input controller-manager.
 func newReconciler(manager manager.Manager) reconcile.Reconciler {
 	return &ReconcileBalancer{
 		client: manager.GetClient(),
@@ -32,9 +32,9 @@ func newReconciler(manager manager.Manager) reconcile.Reconciler {
 	}
 }
 
-// addReconciler adds r to manager.
+// addReconciler adds r to controller-manager.
 func addReconciler(manager manager.Manager, r reconcile.Reconciler) error {
-	// creates a balancer-controller registered with manager
+	// creates a balancer-controller registered with controller-manager
 	c, err := controller.New("balancer-controller", manager, controller.Options{Reconciler: r})
 	if err != nil {
 		return err
@@ -69,7 +69,7 @@ func addReconciler(manager manager.Manager, r reconcile.Reconciler) error {
 	return nil
 }
 
-// Add creates a newly registered balancer-controller to manager.
+// Add creates a newly registered balancer-controller to controller-manager.
 func Add(manager manager.Manager) error {
 	return addReconciler(manager, newReconciler(manager))
 }

@@ -34,6 +34,11 @@ bash ${SCRIPT_ROOT}/hack/generate-groups.sh "deepcopy,client,informer,lister" \
   "balancer:v1alpha1" \
   --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.go.txt
 
-echo "done"
+echo "==============================="
 
-## TODO: How to generate zz_generated.defaults.go and zz_generated.openapi/go and is it necessary?
+bash ${SCRIPT_ROOT}/hack/generate-internal-groups.sh "defaulter,openapi" \
+  github.com/hliangzhao/balancer/pkg/apis github.com/hliangzhao/balancer/pkg/apis github.com/hliangzhao/balancer/pkg/apis \
+  "balancer:v1alpha1" \
+  --go-header-file ${SCRIPT_ROOT}/hack/boilerplate.go.txt
+
+echo "done"
