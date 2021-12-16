@@ -19,13 +19,13 @@ import (
 func NewConfigMap(balancer *balancerv1alpha1.Balancer) (*corev1.ConfigMap, error) {
 	return &corev1.ConfigMap{
 		ObjectMeta: v1.ObjectMeta{
-			Name: ConfigMapName(balancer),
+			Name:      ConfigMapName(balancer),
 			Namespace: balancer.Namespace,
 		},
 		Data: map[string]string{
 			"nginx.conf": nginx.NewConfig(balancer),
 		},
-	},nil
+	}, nil
 }
 
 // syncConfigMap sync the configmap that created by the deployment of Balancer.
@@ -35,15 +35,15 @@ func (r *ReconcileBalancer) syncConfigMap(balancer *balancerv1alpha1.Balancer) (
 		return nil, err
 	}
 
-	// set balancer as the owner of cm
-	if err := controllerutil.SetOwnerReference(balancer, cm, r.scheme); err != nil {
+	// set balancer as the controller owner-reference of cm
+	if err := controllerutil.SetControllerReference(balancer, cm, r.scheme); err != nil {
 		return nil, err
 	}
 
-	found := &corev1.ConfigMap{}
-	err = r.client.Get(context.Background(), types.NamespacedName{Namespace: cm.Namespace, Name: cm.Name}, found)
+	foundCm := &corev1.ConfigMap{}
+	err = r.client.Get(context.Background(), types.NamespacedName{Namespace: cm.Namespace, Name: cm.Name}, foundCm)
 	if err != nil && errors.IsNotFound(err) {
-		// corresponding cm not found in the cluster, create it with the newest cm
+		// corresponding cm not foundCm in the cluster, create it with the newest cm
 		if err = r.client.Create(context.Background(), cm); err != nil {
 			return nil, err
 		}
@@ -52,9 +52,9 @@ func (r *ReconcileBalancer) syncConfigMap(balancer *balancerv1alpha1.Balancer) (
 		return nil, err
 	}
 
-	// corresponding cm found, update it with the newest cm
-	found.Data = cm.Data
-	if err = r.client.Update(context.Background(), found); err != nil {
+	// corresponding cm foundCm, update it with the newest cm
+	foundCm.Data = cm.Data
+	if err = r.client.Update(context.Background(), foundCm); err != nil {
 		return nil, err
 	}
 	return cm, nil

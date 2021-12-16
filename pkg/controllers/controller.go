@@ -9,7 +9,7 @@ import (
 
 var AddToManagerFuncs []func(manager.Manager) error
 
-// AddToManager is the factory to add controllers to the manager.
+// AddToManager is the factory to add controllers to the controller-manager.
 func AddToManager(manager manager.Manager) error {
 	for _, f := range AddToManagerFuncs {
 		if err := f(manager); err != nil {

@@ -52,7 +52,7 @@ type BalancerSpec struct {
 }
 
 // BalancerStatus defines the actual status of Balancer.
-// TODO: could add more fields
+// TODO: could add more fields (new feature)
 // +k8s:openapi-gen=true
 type BalancerStatus struct {
 	// +optional

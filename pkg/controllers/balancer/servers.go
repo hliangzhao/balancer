@@ -70,15 +70,15 @@ func (r *ReconcileBalancer) syncServers(balancer *balancerv1alpha1.Balancer) err
 		go func(svc *corev1.Service) {
 			defer wg.Done()
 
-			// set balancer as the owner of svc
-			if err := controllerutil.SetOwnerReference(balancer, svc, r.scheme); err != nil {
+			// set balancer as the controller owner-reference of svc
+			if err := controllerutil.SetControllerReference(balancer, svc, r.scheme); err != nil {
 				createErrCh <- err
 				return
 			}
 
 			// create or update
-			found := &corev1.Service{}
-			err := r.client.Get(context.Background(), types.NamespacedName{Namespace: svc.Namespace, Name: svc.Name}, found)
+			foundSvc := &corev1.Service{}
+			err := r.client.Get(context.Background(), types.NamespacedName{Namespace: svc.Namespace, Name: svc.Name}, foundSvc)
 			if err != nil && errors.IsNotFound(err) {
 				if err = r.client.Create(context.Background(), svc); err != nil {
 					createErrCh <- err
@@ -89,8 +89,8 @@ func (r *ReconcileBalancer) syncServers(balancer *balancerv1alpha1.Balancer) err
 				return
 			}
 
-			found.Spec.Ports = svc.Spec.Ports
-			found.Spec.Selector = svc.Spec.Selector
+			foundSvc.Spec.Ports = svc.Spec.Ports
+			foundSvc.Spec.Selector = svc.Spec.Selector
 			if err = r.client.Update(context.Background(), svc); err != nil {
 				createErrCh <- err
 				return
@@ -111,7 +111,6 @@ func (r *ReconcileBalancer) syncServers(balancer *balancerv1alpha1.Balancer) err
 }
 
 // groupServers gets services to created from current balancer and divided current services into active and to-be-deleted.
-// TODO: servicesToCreate is not necessary?
 func groupServers(balancer *balancerv1alpha1.Balancer, services []corev1.Service) (servicesToCreate []corev1.Service,
 	servicesToDelete []corev1.Service, activeServices []corev1.Service) {
 

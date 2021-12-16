@@ -12,13 +12,13 @@ import (
 )
 
 func (r *ReconcileBalancer) syncDeployment(balancer *balancerv1alpha1.Balancer) error {
-	// 1 firstly, we sync configmap
+	// firstly, we sync configmap
 	cm, err := r.syncConfigMap(balancer)
 	if err != nil {
 		return err
 	}
 
-	// 2 now we sync deployment
+	// now we sync deployment
 	dp, err := NewDeployment(balancer)
 	if err != nil {
 		return err
@@ -29,26 +29,27 @@ func (r *ReconcileBalancer) syncDeployment(balancer *balancerv1alpha1.Balancer) 
 	// TODO: the assignment should happen only when cm changes
 	dp.Spec.Template.ObjectMeta.Annotations = annotations
 
-	// set balancer as the owner of dp
-	if err = controllerutil.SetOwnerReference(balancer, dp, r.scheme); err != nil {
+	// set balancer as the controller owner-reference of dp
+	if err = controllerutil.SetControllerReference(balancer, dp, r.scheme); err != nil {
 		return err
 	}
 
-	found := &appv1.Deployment{}
-	err = r.client.Get(context.Background(), types.NamespacedName{Namespace: balancer.Namespace, Name: balancer.Name}, found)
+	foundDp := &appv1.Deployment{}
+	err = r.client.Get(context.Background(), types.NamespacedName{Namespace: balancer.Namespace, Name: balancer.Name}, foundDp)
 	if err != nil && errors.IsNotFound(err) {
-		// corresponding dp not found in the cluster, create it with the newest dp
+		// corresponding dp not foundDp in the cluster, create it with the newest dp
 		if err = r.client.Create(context.Background(), dp); err != nil {
 			return err
 		}
+		return nil
 	} else if err != nil {
 		return err
 	}
 
-	// corresponding dp found, update it with the newest dp
-	found.Spec.Template = dp.Spec.Template
-	if err = r.client.Update(context.Background(), found); err != nil {
-		return  err
+	// corresponding dp foundDp, update it with the newest dp
+	foundDp.Spec.Template = dp.Spec.Template
+	if err = r.client.Update(context.Background(), foundDp); err != nil {
+		return err
 	}
 	return nil
 }
@@ -101,7 +102,6 @@ func NewDeployment(balancer *balancerv1alpha1.Balancer) (*appv1.Deployment, erro
 				},
 			},
 		},
-		Status: appv1.DeploymentStatus{},
 	}, nil
 }
 
