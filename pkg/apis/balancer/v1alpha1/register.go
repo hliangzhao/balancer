@@ -16,7 +16,7 @@ var (
 	// SchemeBuilder register the go types Balancer and BalancerList to Kubernetes GroupVersionKinds
 	SchemeBuilder      = runtime.NewSchemeBuilder(addKnownTypes)
 	// AddToScheme applies all the stored functions to the scheme
-	AddToScheme = SchemeBuilder.AddToScheme
+	AddToScheme = SchemeBuilder.AddToScheme // TODO: AddToScheme should be called in main to finally add the CRDs to scheme!
 )
 
 // Kind takes an unqualified kind and returns a Group-qualified GroupKind.

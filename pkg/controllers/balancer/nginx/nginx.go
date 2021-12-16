@@ -118,6 +118,7 @@ upstream %s {
 //     }
 // }
 // ======================================================
+// Check that whether this is correct and fix it.
 func NewConfig(balancer *balancerv1alpha1.Balancer) string {
 	var servers []Server
 	for _, balancerPort := range balancer.Spec.Ports {

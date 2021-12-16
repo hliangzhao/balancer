@@ -11,7 +11,7 @@ import (
 )
 
 // syncService sync the service that created by balancer.
-// If the service of balancer is not found, create it with the newest service;
+// Logic: If the service of balancer is not found, create it with the newest service;
 // Otherwise, update it with the newest service.
 func (r *ReconcileBalancer) syncService(balancer *balancerv1alpha1.Balancer) error {
 	svc, err := NewService(balancer)
@@ -19,15 +19,15 @@ func (r *ReconcileBalancer) syncService(balancer *balancerv1alpha1.Balancer) err
 		return err
 	}
 
-	// set balancer as the owner of svc
-	if err := controllerutil.SetOwnerReference(balancer, svc, r.scheme); err != nil {
+	// set balancer as the controller owner-reference of svc
+	if err := controllerutil.SetControllerReference(balancer, svc, r.scheme); err != nil {
 		return err
 	}
 
-	found := &corev1.Service{}
-	err = r.client.Get(context.Background(), types.NamespacedName{Namespace: svc.Namespace, Name: svc.Name}, found)
+	foundSvc := &corev1.Service{}
+	err = r.client.Get(context.Background(), types.NamespacedName{Namespace: svc.Namespace, Name: svc.Name}, foundSvc)
 	if err != nil && errors.IsNotFound(err) {
-		// corresponding service not found in the cluster, create it with the newest svc
+		// corresponding service not foundSvc in the cluster, create it with the newest svc
 		if err = r.client.Create(context.Background(), svc); err != nil {
 			return err
 		}
@@ -37,7 +37,9 @@ func (r *ReconcileBalancer) syncService(balancer *balancerv1alpha1.Balancer) err
 	}
 
 	// corresponding service found, update it with the newest svc
-	if err = r.client.Update(context.Background(), svc); err != nil {
+	foundSvc.Spec.Ports = svc.Spec.Ports
+	foundSvc.Spec.Selector = svc.Spec.Selector
+	if err = r.client.Update(context.Background(), foundSvc); err != nil {
 		return err
 	}
 	return nil
