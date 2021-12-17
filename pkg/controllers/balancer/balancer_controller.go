@@ -9,13 +9,13 @@ import (
 	`sigs.k8s.io/controller-runtime/pkg/client`
 	`sigs.k8s.io/controller-runtime/pkg/controller`
 	`sigs.k8s.io/controller-runtime/pkg/handler`
-	`sigs.k8s.io/controller-runtime/pkg/log`
+	logf `sigs.k8s.io/controller-runtime/pkg/log`
 	`sigs.k8s.io/controller-runtime/pkg/manager`
 	`sigs.k8s.io/controller-runtime/pkg/reconcile`
 	`sigs.k8s.io/controller-runtime/pkg/source`
 )
 
-var logger = log.Log.WithName("controller_balancer")
+var log = logf.Log.WithName("balancer-controller")
 
 // ReconcileBalancer reconciles a Balancer instance. Reconciler is the core of a controller.
 type ReconcileBalancer struct {
@@ -83,7 +83,7 @@ var _ reconcile.Reconciler = &ReconcileBalancer{}
 // Reconcile reads the status of the Balancer object and makes changes toward to Balancer.Spec.
 // This func must be implemented to be a legal reconcile.Reconciler!
 func (r *ReconcileBalancer) Reconcile(context context.Context, request reconcile.Request) (reconcile.Result, error) {
-	reqLogger := logger.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
+	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
 	reqLogger.Info("Reconciling Balancer")
 
 	// fetch the Balancer instance through the client
