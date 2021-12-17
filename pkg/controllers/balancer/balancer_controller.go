@@ -15,7 +15,7 @@ import (
 	`sigs.k8s.io/controller-runtime/pkg/source`
 )
 
-var log = logf.Log.WithName("controller_balancer")
+var log = logf.Log.WithName("balancer-controller")
 
 // ReconcileBalancer reconciles a Balancer instance. Reconciler is the core of a controller.
 type ReconcileBalancer struct {

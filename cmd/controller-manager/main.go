@@ -4,6 +4,7 @@ import (
 	`context`
 	`flag`
 	`fmt`
+	`github.com/hliangzhao/balancer/cmd/controller-manager/app`
 	balancerv1alpha1 `github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1`
 	`github.com/hliangzhao/balancer/pkg/controllers`
 	`github.com/operator-framework/operator-lib/leader`
@@ -12,15 +13,10 @@ import (
 	logf `sigs.k8s.io/controller-runtime/pkg/log`
 	`sigs.k8s.io/controller-runtime/pkg/log/zap`
 	`sigs.k8s.io/controller-runtime/pkg/manager`
+	`sigs.k8s.io/controller-runtime/pkg/manager/signals`
 )
 
-const (
-	metricsHost         = "0.0.0.0"
-	metricsPort         = 8383
-	operatorMetricsPort = 8686
-)
-
-var log = logf.Log.WithName("cmd")
+var log = logf.Log.WithName("balancer-cmd")
 
 func main() {
 	// define the custom zap logger
@@ -49,34 +45,42 @@ func main() {
 
 	// setup controller-manager with metrics serving
 	log.Info("Setting up controller-manager.")
-	watchNs, err := GetWatchNamespace()
+	watchNs, err := app.GetWatchNamespace()
 	if err != nil {
 		log.Error(err, "Failed to get watch namespace")
 		os.Exit(1)
 	}
 	mgr, err := manager.New(cfg, manager.Options{
-		Namespace:          watchNs,
-		MapperProvider:     NewDynamicRESTMapper,
-		MetricsBindAddress: fmt.Sprintf("%s:%d", metricsHost, metricsPort),
+		Namespace:      watchNs,
+		MapperProvider: app.NewDynamicRESTMapper,
+		// MetricsBindAddress is the TCP address that the controller should bind to for serving prometheus metrics
+		MetricsBindAddress: fmt.Sprintf("%s:%d", app.MetricsHost, app.MetricsPort),
 	})
 	if err != nil {
 		log.Error(err, "Failed to set up manager")
 		os.Exit(1)
 	}
 
-	// setup Scheme for all resources
+	// setup scheme for all resources
 	log.Info("Registering Components.")
 	if err := balancerv1alpha1.AddToScheme(mgr.GetScheme()); err != nil {
 		log.Error(err, "Failed to setup scheme for all resources")
 		os.Exit(1)
 	}
 
-	// setup all Controllers
+	// setup all controllers
 	log.Info("Setting up all controllers.")
 	if err := controllers.AddToManager(mgr); err != nil {
 		log.Error(err, "Failed to set up controllers")
 		os.Exit(1)
 	}
 
-	// TODO: serve custom metrics
+	// TODO: how to serve custom metrics for v1.22.2?
+
+	// finally, we start the manager
+	log.Info("Starting the cmd.")
+	if err := mgr.Start(signals.SetupSignalHandler()); err != nil {
+		log.Error(err, "Unable start the manager")
+		os.Exit(1)
+	}
 }

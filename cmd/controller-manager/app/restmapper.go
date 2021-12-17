@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package app
 
 import (
 	"k8s.io/apimachinery/pkg/api/meta"
@@ -22,6 +22,8 @@ import (
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/restmapper"
 )
+
+// TODO: [fix required] copied from github.com/operator-framework/operator-sdk
 
 type DynamicRESTMapper struct {
 	client   discovery.DiscoveryInterface
