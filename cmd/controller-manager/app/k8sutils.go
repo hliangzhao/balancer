@@ -15,12 +15,12 @@
 package app
 
 import (
-	`fmt`
-	`io/ioutil`
-	`k8s.io/apimachinery/pkg/runtime`
-	`k8s.io/apimachinery/pkg/runtime/schema`
-	`os`
-	`strings`
+	"fmt"
+	"io/ioutil"
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/schema"
+	"os"
+	"strings"
 )
 
 // TODO: [fix required] copied from github.com/operator-framework/operator-sdk
@@ -106,7 +106,7 @@ func GetGVKsFromAddToScheme(addToSchemeFunc func(*runtime.Scheme) error) ([]sche
 	}
 	schemeAllKnownTypes := s.AllKnownTypes()
 	var ownGVKs []schema.GroupVersionKind
-	for gvk, _ := range schemeAllKnownTypes {
+	for gvk := range schemeAllKnownTypes {
 		if !isKubeMetaKind(gvk.Kind) {
 			ownGVKs = append(ownGVKs, gvk)
 		}

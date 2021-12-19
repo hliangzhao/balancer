@@ -1,15 +1,15 @@
 package framework
 
 import (
-	`context`
-	`fmt`
-	`github.com/pkg/errors`
-	metav1 `k8s.io/apimachinery/pkg/apis/meta/v1`
-	`k8s.io/apimachinery/pkg/util/wait`
-	`k8s.io/client-go/kubernetes`
-	`os`
-	`path/filepath`
-	`time`
+	"context"
+	"fmt"
+	"github.com/pkg/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/util/wait"
+	"k8s.io/client-go/kubernetes"
+	"os"
+	"path/filepath"
+	"time"
 )
 
 // GetFileDescriptor returns the file descriptor for the given relative file path.

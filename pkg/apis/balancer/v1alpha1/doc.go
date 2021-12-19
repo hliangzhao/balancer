@@ -3,7 +3,6 @@
 // +groupName=hliangzhao.io
 package v1alpha1
 
-
 // line 1: It tells deepcopy-gen to create deepcopy methods by default for every type in this package.
 //     The `register` keyword will enable the registration of deepcopy methods into the scheme.
 

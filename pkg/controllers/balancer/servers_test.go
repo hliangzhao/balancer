@@ -1,6 +1,6 @@
 package balancer
 
-import `testing`
+import "testing"
 
 func TestGroupServers(t *testing.T) {
 	// TODO

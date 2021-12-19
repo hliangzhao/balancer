@@ -1,11 +1,11 @@
 package framework
 
 import (
-	`context`
-	rbacv1 `k8s.io/api/rbac/v1`
-	metav1 `k8s.io/apimachinery/pkg/apis/meta/v1`
-	`k8s.io/apimachinery/pkg/util/yaml`
-	`k8s.io/client-go/kubernetes`
+	"context"
+	rbacv1 "k8s.io/api/rbac/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/util/yaml"
+	"k8s.io/client-go/kubernetes"
 )
 
 func CreateOrUpdateClusterRole(client kubernetes.Interface, relativeFilePath string) error {
@@ -36,7 +36,6 @@ func DeleteClusterRole(client kubernetes.Interface, relativeFilePath string) err
 	if err != nil {
 		return err
 	}
-
 	return client.RbacV1().ClusterRoles().Delete(context.Background(), clusterRole.Name, metav1.DeleteOptions{})
 }
 

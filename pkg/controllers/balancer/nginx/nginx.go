@@ -1,9 +1,9 @@
 package nginx
 
 import (
-	`fmt`
-	balancerv1alpha1 `github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1`
-	`strings`
+	"fmt"
+	balancerv1alpha1 "github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1"
+	"strings"
 )
 
 // Server serves for a typical port with a specific reverse proxy.

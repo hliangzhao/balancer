@@ -1,14 +1,14 @@
 package framework
 
 import (
-	hliangzhaoclientv1alpha1 `github.com/hliangzhao/balancer/pkg/client/clientset/versioned/typed/balancer/v1alpha1`
-	apiextensionsv1 `k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset`
-	`k8s.io/client-go/kubernetes`
-	`k8s.io/client-go/rest`
-	`k8s.io/client-go/tools/clientcmd`
-	`net/http`
-	`testing`
-	`time`
+	hliangzhaoclientv1alpha1 "github.com/hliangzhao/balancer/pkg/client/clientset/versioned/typed/balancer/v1alpha1"
+	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset"
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/rest"
+	"k8s.io/client-go/tools/clientcmd"
+	"net/http"
+	"testing"
+	"time"
 )
 
 // Framework is a test framework

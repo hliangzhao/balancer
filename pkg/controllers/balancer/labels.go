@@ -1,7 +1,7 @@
 package balancer
 
 import (
-	balancerv1alpha1 `github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1`
+	balancerv1alpha1 "github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1"
 )
 
 func NewPodLabels(balancer *balancerv1alpha1.Balancer) map[string]string {

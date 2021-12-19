@@ -1,9 +1,9 @@
 package v1alpha1
 
 import (
-	metav1 `k8s.io/apimachinery/pkg/apis/meta/v1`
-	`k8s.io/apimachinery/pkg/runtime`
-	`k8s.io/apimachinery/pkg/runtime/schema`
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
 const (
@@ -14,7 +14,7 @@ const (
 var (
 	SchemeGroupVersion = schema.GroupVersion{Group: GroupName, Version: Version}
 	// SchemeBuilder register the go types Balancer and BalancerList to Kubernetes GroupVersionKinds
-	SchemeBuilder      = runtime.NewSchemeBuilder(addKnownTypes)
+	SchemeBuilder = runtime.NewSchemeBuilder(addKnownTypes)
 	// AddToScheme applies all the stored functions to the scheme
 	AddToScheme = SchemeBuilder.AddToScheme // TODO: AddToScheme should be called in main to finally add the CRDs to scheme!
 )

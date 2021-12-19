@@ -1,18 +1,18 @@
 package framework
 
 import (
-	`golang.org/x/sync/errgroup`
-	`strconv`
-	`strings`
-	`testing`
-	`time`
+	"golang.org/x/sync/errgroup"
+	"strconv"
+	"strings"
+	"testing"
+	"time"
 )
 
-type finalizeFunc func() error
+type FinalizeFunc func() error
 
 type TestContext struct {
 	Id           string
-	cleanupFuncs []finalizeFunc
+	cleanupFuncs []FinalizeFunc // usually resource delete functions
 }
 
 func (f *Framework) NewTestContext(t *testing.T) TestContext {
@@ -43,6 +43,6 @@ func (ctx *TestContext) Cleanup(t *testing.T) {
 	}
 }
 
-func (ctx *TestContext) AddFinalizerFunc(fn finalizeFunc) {
+func (ctx *TestContext) AddFinalizerFunc(fn FinalizeFunc) {
 	ctx.cleanupFuncs = append(ctx.cleanupFuncs, fn)
 }

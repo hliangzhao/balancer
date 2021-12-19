@@ -16,7 +16,7 @@ limitations under the License.
 
 package app
 
-import `io`
+import "io"
 
 // TODO: [fix required] copied from k8s.io/kube-state-metrics
 

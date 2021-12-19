@@ -1,14 +1,14 @@
 package framework
 
 import (
-	`context`
-	`fmt`
-	`github.com/pkg/errors`
-	corev1 `k8s.io/api/core/v1`
-	metav1 `k8s.io/apimachinery/pkg/apis/meta/v1`
-	`k8s.io/apimachinery/pkg/util/wait`
-	`k8s.io/apimachinery/pkg/util/yaml`
-	`time`
+	"context"
+	"fmt"
+	"github.com/pkg/errors"
+	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/util/wait"
+	"k8s.io/apimachinery/pkg/util/yaml"
+	"time"
 )
 
 // CreatePod creates pod in given namespace.

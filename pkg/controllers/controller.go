@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	`github.com/hliangzhao/balancer/pkg/controllers/balancer`
-	`sigs.k8s.io/controller-runtime/pkg/manager`
+	"github.com/hliangzhao/balancer/pkg/controllers/balancer"
+	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
 // All controllers will be added in this file.

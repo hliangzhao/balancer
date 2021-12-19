@@ -1,17 +1,17 @@
 package balancer
 
 import (
-	`context`
-	`fmt`
-	balancerv1alpha1 `github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1`
-	corev1 `k8s.io/api/core/v1`
-	`k8s.io/apimachinery/pkg/api/errors`
-	v1 `k8s.io/apimachinery/pkg/apis/meta/v1`
-	`k8s.io/apimachinery/pkg/types`
-	`reflect`
-	`sigs.k8s.io/controller-runtime/pkg/client`
-	`sigs.k8s.io/controller-runtime/pkg/controller/controllerutil`
-	`sync`
+	"context"
+	"fmt"
+	balancerv1alpha1 "github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1"
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
+	"reflect"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
+	"sync"
 )
 
 // syncBalancerStatus sync the status of balancer.

@@ -15,12 +15,12 @@
 package app
 
 import (
-	`k8s.io/apimachinery/pkg/api/meta`
-	`k8s.io/apimachinery/pkg/runtime/schema`
-	utilruntime `k8s.io/apimachinery/pkg/util/runtime`
-	`k8s.io/client-go/discovery`
-	`k8s.io/client-go/rest`
-	`k8s.io/client-go/restmapper`
+	"k8s.io/apimachinery/pkg/api/meta"
+	"k8s.io/apimachinery/pkg/runtime/schema"
+	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
+	"k8s.io/client-go/discovery"
+	"k8s.io/client-go/rest"
+	"k8s.io/client-go/restmapper"
 )
 
 // TODO: [fix required] copied from github.com/operator-framework/operator-sdk
