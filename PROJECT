@@ -1,0 +1,16 @@
+domain: hliangzhao.io
+layout:
+- go.kubebuilder.io/v3
+projectName: balancer
+repo: github.com/hliangzhao/balancer
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: hliangzhao.io
+  group: exposer
+  kind: Balancer
+  path: github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1
+  version: v1alpha1
+version: "3"

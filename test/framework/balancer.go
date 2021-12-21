@@ -40,7 +40,7 @@ func MakeBasicBalancer(namespace, name string, versions []string, weights []int3
 
 func (f *Framework) CreateBalancer(namespace string,
 	balancer *hliangzhaov1alpha1.Balancer) (*hliangzhaov1alpha1.Balancer, error) {
-	result, err := f.HliangzhaoClientV1alpha1.Balancers(namespace).Create(context.Background(),
+	result, err := f.ExposerClientV1alpha1.Balancers(namespace).Create(context.Background(),
 		balancer, metav1.CreateOptions{})
 	if err != nil {
 		return nil, err
@@ -51,7 +51,7 @@ func (f *Framework) CreateBalancer(namespace string,
 func (f *Framework) WaitForBalancerReady(balancer *hliangzhaov1alpha1.Balancer, timeout time.Duration) error {
 	var pollErr error
 	err := wait.Poll(2*time.Second, timeout, func() (bool, error) {
-		actualBalancer, pollErr := f.HliangzhaoClientV1alpha1.Balancers(balancer.Namespace).Get(context.Background(),
+		actualBalancer, pollErr := f.ExposerClientV1alpha1.Balancers(balancer.Namespace).Get(context.Background(),
 			balancer.Name, metav1.GetOptions{})
 		if pollErr != nil {
 			return false, nil
@@ -101,7 +101,7 @@ func (f *Framework) CreateBalancerAndWaitUntilReady(namespace string,
 func (f *Framework) UpdateBalancer(namespace string,
 	balancer *hliangzhaov1alpha1.Balancer) (*hliangzhaov1alpha1.Balancer, error) {
 
-	result, err := f.HliangzhaoClientV1alpha1.Balancers(namespace).Update(context.Background(), balancer, metav1.UpdateOptions{})
+	result, err := f.ExposerClientV1alpha1.Balancers(namespace).Update(context.Background(), balancer, metav1.UpdateOptions{})
 	if err != nil {
 		return nil, fmt.Errorf("updating Balancer instance failed (%s): %v", balancer.Name, err)
 	}

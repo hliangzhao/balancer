@@ -1,0 +1,6 @@
+apiVersion: exposer.hliangzhao.io/v1alpha1
+kind: Balancer
+metadata:
+  name: balancer-sample
+spec:
+  # TODO(user): Add fields here

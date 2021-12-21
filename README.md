@@ -5,5 +5,5 @@ The code in this repository is only for studying usage.
 
 This repository will be used in my next blog: "自定义资源对象与控制器的实现 · K8S实践04".
 
-### References:
+### Reference:
 [https://github.com/draveness/proxier](https://github.com/draveness/proxier)

@@ -1,0 +1,24 @@
+# permissions for end users to edit balancers.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: balancer-editor-role
+rules:
+- apiGroups:
+  - exposer.hliangzhao.io
+  resources:
+  - balancers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - exposer.hliangzhao.io
+  resources:
+  - balancers/status
+  verbs:
+  - get
