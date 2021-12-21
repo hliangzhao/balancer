@@ -3,7 +3,7 @@ package framework
 import (
 	"context"
 	"fmt"
-	hliangzhaov1alpha1 "github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1"
+	balancerv1alpha1 "github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1"
 	controllerbalancer "github.com/hliangzhao/balancer/pkg/controllers/balancer"
 	"github.com/pkg/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -11,26 +11,26 @@ import (
 	"time"
 )
 
-func MakeBasicBalancer(namespace, name string, versions []string, weights []int32) *hliangzhaov1alpha1.Balancer {
-	var backends []hliangzhaov1alpha1.BackendSpec
+func MakeBasicBalancer(namespace, name string, versions []string, weights []int32) *balancerv1alpha1.Balancer {
+	var backends []balancerv1alpha1.BackendSpec
 	{
 	}
 	for idx := range versions {
-		backends = append(backends, hliangzhaov1alpha1.BackendSpec{
+		backends = append(backends, balancerv1alpha1.BackendSpec{
 			Name:     versions[idx],
 			Weight:   weights[idx],
 			Selector: map[string]string{"version": versions[idx]},
 		})
 	}
-	return &hliangzhaov1alpha1.Balancer{
+	return &balancerv1alpha1.Balancer{
 		ObjectMeta: metav1.ObjectMeta{Name: name, Namespace: namespace},
-		Spec: hliangzhaov1alpha1.BalancerSpec{
+		Spec: balancerv1alpha1.BalancerSpec{
 			Backends: backends,
 			Selector: map[string]string{"app": name},
-			Ports: []hliangzhaov1alpha1.BalancerPort{
+			Ports: []balancerv1alpha1.BalancerPort{
 				{
 					Name:     "http",
-					Protocol: hliangzhaov1alpha1.TCP,
+					Protocol: balancerv1alpha1.TCP,
 					Port:     80,
 				},
 			},
@@ -39,7 +39,7 @@ func MakeBasicBalancer(namespace, name string, versions []string, weights []int3
 }
 
 func (f *Framework) CreateBalancer(namespace string,
-	balancer *hliangzhaov1alpha1.Balancer) (*hliangzhaov1alpha1.Balancer, error) {
+	balancer *balancerv1alpha1.Balancer) (*balancerv1alpha1.Balancer, error) {
 	result, err := f.ExposerClientV1alpha1.Balancers(namespace).Create(context.Background(),
 		balancer, metav1.CreateOptions{})
 	if err != nil {
@@ -48,7 +48,7 @@ func (f *Framework) CreateBalancer(namespace string,
 	return result, nil
 }
 
-func (f *Framework) WaitForBalancerReady(balancer *hliangzhaov1alpha1.Balancer, timeout time.Duration) error {
+func (f *Framework) WaitForBalancerReady(balancer *balancerv1alpha1.Balancer, timeout time.Duration) error {
 	var pollErr error
 	err := wait.Poll(2*time.Second, timeout, func() (bool, error) {
 		actualBalancer, pollErr := f.ExposerClientV1alpha1.Balancers(balancer.Namespace).Get(context.Background(),
@@ -86,7 +86,7 @@ func (f *Framework) WaitForBalancerReady(balancer *hliangzhaov1alpha1.Balancer, 
 }
 
 func (f *Framework) CreateBalancerAndWaitUntilReady(namespace string,
-	balancer *hliangzhaov1alpha1.Balancer) (*hliangzhaov1alpha1.Balancer, error) {
+	balancer *balancerv1alpha1.Balancer) (*balancerv1alpha1.Balancer, error) {
 
 	result, err := f.CreateBalancer(namespace, balancer)
 	if err != nil {
@@ -99,7 +99,7 @@ func (f *Framework) CreateBalancerAndWaitUntilReady(namespace string,
 }
 
 func (f *Framework) UpdateBalancer(namespace string,
-	balancer *hliangzhaov1alpha1.Balancer) (*hliangzhaov1alpha1.Balancer, error) {
+	balancer *balancerv1alpha1.Balancer) (*balancerv1alpha1.Balancer, error) {
 
 	result, err := f.ExposerClientV1alpha1.Balancers(namespace).Update(context.Background(), balancer, metav1.UpdateOptions{})
 	if err != nil {
@@ -109,7 +109,7 @@ func (f *Framework) UpdateBalancer(namespace string,
 }
 
 func (f *Framework) UpdateBalancerAndWaitUntilReady(namespace string,
-	balancer *hliangzhaov1alpha1.Balancer) (*hliangzhaov1alpha1.Balancer, error) {
+	balancer *balancerv1alpha1.Balancer) (*balancerv1alpha1.Balancer, error) {
 
 	result, err := f.UpdateBalancer(namespace, balancer)
 	if err != nil {

@@ -15,7 +15,7 @@ import (
 )
 
 // syncBalancerStatus sync the status of balancer.
-func (r *ReconcileBalancer) syncBalancerStatus(balancer *balancerv1alpha1.Balancer) error {
+func (r *ReconcilerBalancer) syncBalancerStatus(balancer *balancerv1alpha1.Balancer) error {
 	// get current services
 	var svcList corev1.ServiceList
 	if err := r.client.List(context.Background(), &svcList, client.MatchingLabels(NewServiceLabels(balancer))); err != nil {
@@ -39,7 +39,7 @@ func (r *ReconcileBalancer) syncBalancerStatus(balancer *balancerv1alpha1.Balanc
 }
 
 // syncServers creates services to be created and deletes services to be deleted.
-func (r *ReconcileBalancer) syncServers(balancer *balancerv1alpha1.Balancer) error {
+func (r *ReconcilerBalancer) syncServers(balancer *balancerv1alpha1.Balancer) error {
 	// get current services
 	var svcList corev1.ServiceList
 	if err := r.client.List(context.Background(), &svcList, client.MatchingLabels(NewServiceLabels(balancer))); err != nil {

@@ -10,10 +10,10 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 
-// syncService sync the service that created by balancer.
+// syncService sync the front-end service that created by balancer.
 // Logic: If the service of balancer is not found, create it with the newest service;
 // Otherwise, update it with the newest service.
-func (r *ReconcileBalancer) syncService(balancer *balancerv1alpha1.Balancer) error {
+func (r *ReconcilerBalancer) syncService(balancer *balancerv1alpha1.Balancer) error {
 	svc, err := NewService(balancer)
 	if err != nil {
 		return err
@@ -45,7 +45,8 @@ func (r *ReconcileBalancer) syncService(balancer *balancerv1alpha1.Balancer) err
 	return nil
 }
 
-// NewService creates a new Service which exposes all the ports exposed in the Balancer instance.
+// NewService creates a new front-end Service for handling all requests incoming.
+// All the incoming requests will be forwarded by the nginx instance.
 func NewService(balancer *balancerv1alpha1.Balancer) (*corev1.Service, error) {
 	var balancerPorts []corev1.ServicePort
 	for _, port := range balancer.Spec.Ports {
@@ -53,8 +54,6 @@ func NewService(balancer *balancerv1alpha1.Balancer) (*corev1.Service, error) {
 			Name:     port.Name,
 			Protocol: corev1.Protocol(port.Protocol),
 			Port:     int32(port.Port),
-			// TODO: why not assign targetPort?
-			// TargetPort:  port.TargetPort,
 		})
 	}
 

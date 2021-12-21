@@ -3,4 +3,29 @@ kind: Balancer
 metadata:
   name: balancer-sample
 spec:
-  # TODO(user): Add fields here
+  ports:
+    # This is a front-end service for handling all input requests.
+    # Thus, the targetPort is the port exposed by the target backend containers.
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 5678
+  selector:
+    # for selecting a group of related backends
+    app: test
+  backends:
+    - name: v1
+      weight: 40
+      selector:
+        # for selecting a specific backend
+        version: v1
+    - name: v2
+      weight: 20
+      selector:
+        # for selecting a specific backend
+        version: v2
+    - name: v3
+      weight: 40
+      selector:
+        # for selecting a specific backend
+        version: v3
