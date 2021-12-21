@@ -11,7 +11,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 
-func (r *ReconcileBalancer) syncDeployment(balancer *balancerv1alpha1.Balancer) error {
+func (r *ReconcilerBalancer) syncDeployment(balancer *balancerv1alpha1.Balancer) error {
 	// firstly, we sync configmap
 	cm, err := r.syncConfigMap(balancer)
 	if err != nil {
@@ -26,7 +26,7 @@ func (r *ReconcileBalancer) syncDeployment(balancer *balancerv1alpha1.Balancer) 
 	annotations := map[string]string{
 		balancerv1alpha1.ConfigMapHashKey: ConfigMapHash(cm),
 	}
-	// TODO: the assignment should happen only when cm changes
+	// always use the newest annotations
 	dp.Spec.Template.ObjectMeta.Annotations = annotations
 
 	// set balancer as the controller owner-reference of dp
@@ -53,8 +53,6 @@ func (r *ReconcileBalancer) syncDeployment(balancer *balancerv1alpha1.Balancer) 
 	}
 	return nil
 }
-
-// TODO: What about multiple pods? Relations with the number of endpoints?
 
 // NewDeployment creates a new deployment (with one nginx pod) for the Balancer.
 func NewDeployment(balancer *balancerv1alpha1.Balancer) (*appv1.Deployment, error) {

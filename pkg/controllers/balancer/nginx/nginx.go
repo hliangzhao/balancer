@@ -12,7 +12,6 @@ type Server struct {
 	name     string
 	protocol string
 	port     int32
-	// TODO: define IP:Port as a new type `Address`
 	upstream string // Server.upstream will be processed exactly by an upstream
 }
 
@@ -68,7 +67,6 @@ upstream %s {
 
 // NewConfig generates the `nginx.conf` with the given Balancer instance.
 // Example:
-// When serving for multiple balancer ports, the conf would be:
 // ===================== nginx.conf =====================
 // events {
 //     worker_connections 1024;
@@ -78,49 +76,16 @@ upstream %s {
 //         listen 80 tcp;
 //         proxy_pass upstream_http;
 //     }
-//     server {
-//         listen 8080 udp;
-//         proxy_pass upstream_udp;
-//     }
-//     upstream upstream_http {
-//         server example-balancer-v1-backend:80 weight=20;
-//         server example-balancer-v2-backend:80 weight=80;
-//         server example-balancer-udp-backend:80 weight=80;
-//     }
-//     upstream upstream_udp {
-//         server example-balancer-v1-backend:8080 weight=20;
-//         server example-balancer-v2-backend:8080 weight=80;
-//         server example-balancer-udp-backend:8080 weight=80;
-//     }
-// }
-// ======================================================
-//
-// However, what we want:
-// ===================== nginx.conf =====================
-// events {
-//     worker_connections 1024;
-// }
-// stream {
-//     server {
-//         listen 80 tcp;
-//         proxy_pass upstream_http;
-//     }
-//     server {
-//         listen 8080 udp;
-//         proxy_pass upstream_udp;
-//     }
 //     upstream upstream_http {
 //         server example-balancer-v1-backend:80 weight=20;
 //         server example-balancer-v2-backend:80 weight=80;
 //     }
-//     upstream upstream_udp {
-//         server example-balancer-udp-backend:8080 weight=80;
-//     }
 // }
 // ======================================================
-// Check that whether this is correct and fix it.
 func NewConfig(balancer *balancerv1alpha1.Balancer) string {
 	var servers []Server
+	// TODO: there should be only one element in balancer.Spec.Ports. Check it!
+	//  Maybe we could add `+kubebuilder:validation:MaxItems=1` to `Ports` in `BalancerSpec`?
 	for _, balancerPort := range balancer.Spec.Ports {
 		servers = append(servers, Server{
 			name:     balancerPort.Name,
@@ -131,7 +96,6 @@ func NewConfig(balancer *balancerv1alpha1.Balancer) string {
 	}
 
 	var backends []backend
-	// TODO: backends may serve for different balancer ports, but here we get all of them for every server!
 	for _, balancerBackend := range balancer.Spec.Backends {
 		backends = append(backends, backend{
 			name:   fmt.Sprintf("%s-%s-backend", balancer.Name, balancerBackend.Name),
@@ -141,10 +105,9 @@ func NewConfig(balancer *balancerv1alpha1.Balancer) string {
 
 	var upstreams []upstream
 	for _, s := range servers {
-		// TODO: find backendsForThisServer from backends
 		upstreams = append(upstreams, upstream{
 			name:     s.upstream,
-			backends: backends, // TODO: replaced by backendsForThisServer
+			backends: backends,
 			port:     s.port,
 		})
 	}

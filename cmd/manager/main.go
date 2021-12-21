@@ -19,7 +19,7 @@ package main
 import (
 	"flag"
 	exposerv1alpha1 "github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1"
-	`github.com/hliangzhao/balancer/pkg/controllers/balancer`
+	"github.com/hliangzhao/balancer/pkg/controllers"
 	"os"
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
@@ -76,14 +76,18 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&balancer.BalancerReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-	}).SetupWithManager(mgr); err != nil {
+	if err = controllers.AddToManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Balancer")
 		os.Exit(1)
 	}
 	// +kubebuilder:scaffold:builder
+	// if err = (&balancer.ReconcilerBalancer{
+	// 	Client: mgr.GetClient(),
+	// 	Scheme: mgr.GetScheme(),
+	// }).SetupWithManager(mgr); err != nil {
+	// 	setupLog.Error(err, "unable to create controller", "controller", "Balancer")
+	// 	os.Exit(1)
+	// }
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
 		setupLog.Error(err, "unable to set up health check")

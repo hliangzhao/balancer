@@ -29,7 +29,7 @@ func NewConfigMap(balancer *balancerv1alpha1.Balancer) (*corev1.ConfigMap, error
 }
 
 // syncConfigMap sync the configmap that created by the deployment of Balancer.
-func (r *ReconcileBalancer) syncConfigMap(balancer *balancerv1alpha1.Balancer) (*corev1.ConfigMap, error) {
+func (r *ReconcilerBalancer) syncConfigMap(balancer *balancerv1alpha1.Balancer) (*corev1.ConfigMap, error) {
 	cm, err := NewConfigMap(balancer)
 	if err != nil {
 		return nil, err

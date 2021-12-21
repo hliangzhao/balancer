@@ -17,16 +17,16 @@ import (
 
 var log = logf.Log.WithName("balancer-controller")
 
-// ReconcileBalancer reconciles a Balancer instance. Reconciler is the core of a controller.
-type ReconcileBalancer struct {
+// ReconcilerBalancer reconciles a Balancer instance. Reconciler is the core of a controller.
+type ReconcilerBalancer struct {
 	// client reads obj from the cache
 	client client.Client
 	scheme *runtime.Scheme
 }
 
-// newReconciler creates the ReconcileBalancer with input controller-manager.
+// newReconciler creates the ReconcilerBalancer with input controller-manager.
 func newReconciler(manager manager.Manager) reconcile.Reconciler {
-	return &ReconcileBalancer{
+	return &ReconcilerBalancer{
 		client: manager.GetClient(),
 		scheme: manager.GetScheme(),
 	}
@@ -45,7 +45,6 @@ func addReconciler(manager manager.Manager, r reconcile.Reconciler) error {
 		return err
 	}
 
-	// TODO: why not watch deployment?
 	// the changes of the configmap, pod, and svc which are created by balancer will also be enqueued
 	if err = c.Watch(&source.Kind{Type: &corev1.ConfigMap{}}, &handler.EnqueueRequestForOwner{
 		IsController: true,
@@ -74,15 +73,15 @@ func Add(manager manager.Manager) error {
 	return addReconciler(manager, newReconciler(manager))
 }
 
-// provide a static check that ReconcileBalancer satisfies reconcile.Reconciler interface.
+// provide a static check that ReconcilerBalancer satisfies reconcile.Reconciler interface.
 // The _ used as a name of the variable tells the compiler to effectively discard the RHS value,
 // but to type-check it and evaluate it if it has any side effects, but the anonymous variable per
 // se doesn't take any process space.
-var _ reconcile.Reconciler = &ReconcileBalancer{}
+var _ reconcile.Reconciler = &ReconcilerBalancer{}
 
 // Reconcile reads the status of the Balancer object and makes changes toward to Balancer.Spec.
 // This func must be implemented to be a legal reconcile.Reconciler!
-func (r *ReconcileBalancer) Reconcile(context context.Context, request reconcile.Request) (reconcile.Result, error) {
+func (r *ReconcilerBalancer) Reconcile(context context.Context, request reconcile.Request) (reconcile.Result, error) {
 	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
 	reqLogger.Info("Reconciling Balancer")
 

@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# TODO: to be refined
 # cat the *.yaml files into the final file: balancer.yaml
 
 DEPLOY_FILE=deploy/balancer.yaml

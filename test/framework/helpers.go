@@ -26,7 +26,7 @@ func GetFileDescriptor(relativeFilePath string) (*os.File, error) {
 func WaitForPodReady(client kubernetes.Interface, namespace string,
 	timeout time.Duration, expectedReplicas int, opts metav1.ListOptions) error {
 
-	return wait.Poll(time.Second, timeout, func() (done bool, err error) {
+	return wait.Poll(time.Second, timeout, func() (bool, error) {
 		podList, err := client.CoreV1().Pods(namespace).List(context.Background(), opts)
 		if err != nil {
 			return false, err
@@ -35,19 +35,15 @@ func WaitForPodReady(client kubernetes.Interface, namespace string,
 		for _, pod := range podList.Items {
 			ready, err := PodRunningAndReady(&pod)
 			if err != nil {
-				done = false
-				return
+				return false, err
 			} else if ready == true {
 				numRunningAndReadyPods++
 			}
 		}
 
-		err = nil
 		if numRunningAndReadyPods == expectedReplicas {
-			done = true
-			return
+			return true, nil
 		}
-		done = false
-		return
+		return false, nil
 	})
 }

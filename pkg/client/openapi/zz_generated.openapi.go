@@ -30,7 +30,10 @@ import (
 
 func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
 	return map[string]common.OpenAPIDefinition{
+		"github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1.BackendSpec":    schema_pkg_apis_balancer_v1alpha1_BackendSpec(ref),
 		"github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1.Balancer":       schema_pkg_apis_balancer_v1alpha1_Balancer(ref),
+		"github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1.BalancerList":   schema_pkg_apis_balancer_v1alpha1_BalancerList(ref),
+		"github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1.BalancerPort":   schema_pkg_apis_balancer_v1alpha1_BalancerPort(ref),
 		"github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1.BalancerSpec":   schema_pkg_apis_balancer_v1alpha1_BalancerSpec(ref),
 		"github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1.BalancerStatus": schema_pkg_apis_balancer_v1alpha1_BalancerStatus(ref),
 		"k8s.io/apimachinery/pkg/apis/meta/v1.APIGroup":                            schema_pkg_apis_meta_v1_APIGroup(ref),
@@ -88,11 +91,54 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 	}
 }
 
+func schema_pkg_apis_balancer_v1alpha1_BackendSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "BackendSpec defines the desired status of endpoints of Balancer",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"weight": {
+						SchemaProps: spec.SchemaProps{
+							Default: 0,
+							Type:    []string{"integer"},
+							Format:  "int32",
+						},
+					},
+					"selector": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"name", "weight"},
+			},
+		},
+	}
+}
+
 func schema_pkg_apis_balancer_v1alpha1_Balancer(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Balancer is the Schema for the balancers API example:\n\t\tapiVersion: exposer.hliangzhao.io/v1alpha1\n\t\tkind: Balancer\n\t\tmetadata:\n\t\t name: example-balancer\n\t\tspec:\n\t\t ports:\n\t\t   # a front-end service that handle input requests\n\t\t   - name: http\n\t\t     protocol: TCP\n\t\t     port: 80\n\t\t     targetPort: 5678\n\t\t selector:\n\t\t   app: test\n\t\t backends:\n\t\t   # each backend is a service that can handle the load allocated to it\n\t\t   # behind each backend, there is actually a deployment with certain replicas of pods\n\t\t   - name: v1\n\t\t     weight: 90\n\t\t     selector:\n\t\t       version: v1\n\t\t   - name: v2\n\t\t     weight: 9\n\t\t     selector:\n\t\t       version: v2",
+				Description: "Balancer is the Schema for the balancers API",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -132,6 +178,98 @@ func schema_pkg_apis_balancer_v1alpha1_Balancer(ref common.ReferenceCallback) co
 		},
 		Dependencies: []string{
 			"github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1.BalancerSpec", "github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1.BalancerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_pkg_apis_balancer_v1alpha1_BalancerList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "BalancerList contains a list of Balancer",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1.Balancer"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1.Balancer", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_pkg_apis_balancer_v1alpha1_BalancerPort(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "BalancerPort contains the endpoints and exposed ports.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"protocol": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"port": {
+						SchemaProps: spec.SchemaProps{
+							Description: "the port that will be exposed by the balancer",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"targetPort": {
+						SchemaProps: spec.SchemaProps{
+							Description: "the port that used by the container",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/util/intstr.IntOrString"),
+						},
+					},
+				},
+				Required: []string{"port"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/util/intstr.IntOrString"},
 	}
 }
 

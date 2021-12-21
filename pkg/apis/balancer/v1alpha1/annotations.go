@@ -18,6 +18,6 @@ package v1alpha1
 
 const (
 	// ConfigMapHashKey is the key of the annotation which is used by the Balancer.
-	// the Balancer wraps a Nginx instance, and the configmap is acted as the `nginx.conf`.
+	// Balancer wraps a Nginx instance, and the value of the configmap is `nginx.conf`.
 	ConfigMapHashKey = "balancer.exposer.hliangzhao.io/configmap-hash"
 )
