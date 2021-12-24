@@ -47,13 +47,17 @@ const (
 // 	   # each backend is a service that can handle the workload allocated to it
 // 	   # behind each backend, there is actually a deployment with certain replicas of pods is selected based on selectors
 // 	   - name: v1
-// 	     weight: 90
+// 	     weight: 40
 // 	     selector:
 // 	       version: v1
 // 	   - name: v2
-// 	     weight: 9
+// 	     weight: 20
 // 	     selector:
 // 	       version: v2
+// 	   - name: v3
+// 	     weight: 40
+// 	     selector:
+// 	       version: v3
 // ==========================================
 
 // Balancer is the Schema for the balancers API
@@ -96,11 +100,15 @@ type BackendSpec struct {
 // BalancerPort contains the endpoints and exposed ports.
 // +k8s:openapi-gen=true
 type BalancerPort struct {
+	// The name of this port within the proxier. This must be a DNS_LABEL.
+	// All ports within a ServiceSpec must have unique names. This maps to
+	// the 'Name' field in EndpointPort objects.
+	// Optional if only one BalancerPort is defined on this service.
 	// +required
-	Name string `json:"name,omitempty"` // name of the endpoints
+	Name string `json:"name,omitempty"`
 
 	// +optional
-	Protocol Protocol `json:"protocol,omitempty"` // default is TCP
+	Protocol Protocol `json:"protocol,omitempty"`
 
 	// the port that will be exposed by the balancer
 	Port Port `json:"port"`

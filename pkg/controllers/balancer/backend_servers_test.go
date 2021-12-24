@@ -14,10 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha1
+package balancer
 
-const (
-	// ConfigMapHashKey is the key of the annotation which is used by the Balancer.
-	// Balancer wraps a Nginx instance, and the value corresponding to key ConfigMapHashKey is a hashing result.
-	ConfigMapHashKey = "balancer.exposer.hliangzhao.io/configmap-hash"
-)
+import "testing"
+
+func TestGroupServers(t *testing.T) {
+	// TODO
+}

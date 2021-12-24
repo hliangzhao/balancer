@@ -239,8 +239,9 @@ func schema_pkg_apis_balancer_v1alpha1_BalancerPort(ref common.ReferenceCallback
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "The name of this port within the proxier. This must be a DNS_LABEL. All ports within a ServiceSpec must have unique names. This maps to the 'Name' field in EndpointPort objects. Optional if only one BalancerPort is defined on this service.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"protocol": {

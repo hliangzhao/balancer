@@ -1,3 +1,19 @@
+/*
+Copyright 2021 hliangzhao.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 package nginx
 
 import (
@@ -6,13 +22,12 @@ import (
 	"strings"
 )
 
-// Server serves for a typical port with a specific reverse proxy.
-type Server struct {
-	// TODO: the name segment is not necessary, remove it
+// server serves for a typical port with a specific reverse proxy.
+type server struct {
 	name     string
 	protocol string
 	port     int32
-	upstream string // Server.upstream will be processed exactly by an upstream
+	upstream string // server.upstream will be processed exactly by an upstream
 }
 
 // conf returns the config segment for the key `server` in nginx.conf.
@@ -21,7 +36,7 @@ type Server struct {
 //     listen 80 tcp;
 //     proxy_pass upstream_http;
 // }
-func (s *Server) conf() string {
+func (s *server) conf() string {
 	var protocol string
 	if s.protocol == "udp" {
 		protocol = "udp"
@@ -34,7 +49,7 @@ server {
 `, s.port, protocol, s.upstream)
 }
 
-// backend is the endpoint and its weight for load balancing.
+// backend is a backend service.
 type backend struct {
 	name   string
 	weight int32
@@ -50,8 +65,9 @@ type upstream struct {
 // conf returns the config segment for the key `upstream` in nginx.conf.
 // Example：
 // upstream upstream_http {
-//     server example-balancer-v1-backend:80 weight=20;
-//     server example-balancer-v2-backend:80 weight=80;
+//     server example-balancer-v1-backend:80 weight=40;
+//     server example-balancer-v2-backend:80 weight=20;
+//     server example-balancer-v3-backend:80 weight=40;
 // }
 func (us *upstream) conf() string {
 	backendStr := ""
@@ -83,11 +99,9 @@ upstream %s {
 // }
 // ======================================================
 func NewConfig(balancer *balancerv1alpha1.Balancer) string {
-	var servers []Server
-	// TODO: there should be only one element in balancer.Spec.Ports. Check it!
-	//  Maybe we could add `+kubebuilder:validation:MaxItems=1` to `Ports` in `BalancerSpec`?
+	var servers []server
 	for _, balancerPort := range balancer.Spec.Ports {
-		servers = append(servers, Server{
+		servers = append(servers, server{
 			name:     balancerPort.Name,
 			protocol: strings.ToLower(string(balancerPort.Protocol)),
 			port:     int32(balancerPort.Port),
