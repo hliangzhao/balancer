@@ -18,7 +18,7 @@ package balancer
 
 import (
 	"context"
-	balancerv1alpha1 "github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1"
+	exposerv1alpha1 "github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -57,25 +57,25 @@ func addReconciler(manager manager.Manager, r reconcile.Reconciler) error {
 	}
 
 	// takes events provided by a Source and uses the EventHandler to enqueue reconcile.Requests in response to the events.
-	if err = c.Watch(&source.Kind{Type: &balancerv1alpha1.Balancer{}}, &handler.EnqueueRequestForObject{}); err != nil {
+	if err = c.Watch(&source.Kind{Type: &exposerv1alpha1.Balancer{}}, &handler.EnqueueRequestForObject{}); err != nil {
 		return err
 	}
 	// the changes of the configmap, pod, and svc which are created by balancer will also be enqueued
 	if err = c.Watch(&source.Kind{Type: &corev1.ConfigMap{}}, &handler.EnqueueRequestForOwner{
 		IsController: true,
-		OwnerType:    &balancerv1alpha1.Balancer{}},
+		OwnerType:    &exposerv1alpha1.Balancer{}},
 	); err != nil {
 		return err
 	}
 	if err = c.Watch(&source.Kind{Type: &corev1.Pod{}}, &handler.EnqueueRequestForOwner{
 		IsController: true,
-		OwnerType:    &balancerv1alpha1.Balancer{}},
+		OwnerType:    &exposerv1alpha1.Balancer{}},
 	); err != nil {
 		return err
 	}
 	if err = c.Watch(&source.Kind{Type: &corev1.Service{}}, &handler.EnqueueRequestForOwner{
 		IsController: true,
-		OwnerType:    &balancerv1alpha1.Balancer{}},
+		OwnerType:    &exposerv1alpha1.Balancer{}},
 	); err != nil {
 		return err
 	}
@@ -101,7 +101,7 @@ func (r *ReconcilerBalancer) Reconcile(context context.Context, request reconcil
 	reqLogger.Info("Reconciling Balancer")
 
 	// fetch the expected Balancer instance through the client
-	balancer := &balancerv1alpha1.Balancer{}
+	balancer := &exposerv1alpha1.Balancer{}
 	if err := r.client.Get(context, request.NamespacedName, balancer); err != nil {
 		// balancer not exist
 		if errors.IsNotFound(err) {

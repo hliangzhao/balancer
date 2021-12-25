@@ -19,7 +19,7 @@ package balancer
 import (
 	"context"
 	"fmt"
-	balancerv1alpha1 "github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1"
+	exposerv1alpha1 "github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -31,7 +31,7 @@ import (
 )
 
 // syncBalancerStatus sync Balancer.Status.
-func (r *ReconcilerBalancer) syncBalancerStatus(balancer *balancerv1alpha1.Balancer) error {
+func (r *ReconcilerBalancer) syncBalancerStatus(balancer *exposerv1alpha1.Balancer) error {
 	// get current backend services
 	var svcList corev1.ServiceList
 	if err := r.client.List(context.Background(), &svcList, client.MatchingLabels(NewServiceLabels(balancer))); err != nil {
@@ -40,7 +40,7 @@ func (r *ReconcilerBalancer) syncBalancerStatus(balancer *balancerv1alpha1.Balan
 
 	_, backendServicesToDelete, activeBackendServices := groupBackendServers(balancer, svcList.Items)
 
-	actualStatus := balancerv1alpha1.BalancerStatus{
+	actualStatus := exposerv1alpha1.BalancerStatus{
 		ActiveBackendsNum:   int32(len(activeBackendServices)),
 		ObsoleteBackendsNum: int32(len(backendServicesToDelete)),
 	}
@@ -55,7 +55,7 @@ func (r *ReconcilerBalancer) syncBalancerStatus(balancer *balancerv1alpha1.Balan
 }
 
 // syncBackendServices creates and delete backend services according to groupBackendServers result.
-func (r *ReconcilerBalancer) syncBackendServices(balancer *balancerv1alpha1.Balancer) error {
+func (r *ReconcilerBalancer) syncBackendServices(balancer *exposerv1alpha1.Balancer) error {
 	// get current backend services
 	var svcList corev1.ServiceList
 	if err := r.client.List(context.Background(), &svcList, client.MatchingLabels(NewServiceLabels(balancer))); err != nil {
@@ -128,7 +128,7 @@ func (r *ReconcilerBalancer) syncBackendServices(balancer *balancerv1alpha1.Bala
 
 // groupBackendServers gets to-be-created backend services, to-be-deleted backend services,
 // and backend services which should keep unchanged according to balancer and currentBackendServices in cluster.
-func groupBackendServers(balancer *balancerv1alpha1.Balancer, currentBackendServices []corev1.Service) (backendServicesToCreate []corev1.Service,
+func groupBackendServers(balancer *exposerv1alpha1.Balancer, currentBackendServices []corev1.Service) (backendServicesToCreate []corev1.Service,
 	backendServicesToDelete []corev1.Service, activeBackendServices []corev1.Service) {
 
 	var balancerPorts []corev1.ServicePort

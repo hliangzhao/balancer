@@ -18,7 +18,7 @@ package balancer
 
 import (
 	"context"
-	balancerv1alpha1 "github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1"
+	exposerv1alpha1 "github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -27,7 +27,7 @@ import (
 )
 
 // syncFrontendService sync the front-end service that created by balancer.
-func (r *ReconcilerBalancer) syncFrontendService(balancer *balancerv1alpha1.Balancer) error {
+func (r *ReconcilerBalancer) syncFrontendService(balancer *exposerv1alpha1.Balancer) error {
 	svc, err := NewFrontendService(balancer)
 	if err != nil {
 		return err
@@ -61,7 +61,7 @@ func (r *ReconcilerBalancer) syncFrontendService(balancer *balancerv1alpha1.Bala
 
 // NewFrontendService creates a new front-end Service for handling all requests incoming.
 // All the incoming requests will be forwarded to backend services by the nginx instance.
-func NewFrontendService(balancer *balancerv1alpha1.Balancer) (*corev1.Service, error) {
+func NewFrontendService(balancer *exposerv1alpha1.Balancer) (*corev1.Service, error) {
 	var balancerPorts []corev1.ServicePort
 	for _, port := range balancer.Spec.Ports {
 		balancerPorts = append(balancerPorts, corev1.ServicePort{

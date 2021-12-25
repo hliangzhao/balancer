@@ -100,7 +100,7 @@ type BackendSpec struct {
 // BalancerPort contains the endpoints and exposed ports.
 // +k8s:openapi-gen=true
 type BalancerPort struct {
-	// The name of this port within the proxier. This must be a DNS_LABEL.
+	// The name of this port within the balancer. This must be a DNS_LABEL.
 	// All ports within a ServiceSpec must have unique names. This maps to
 	// the 'Name' field in EndpointPort objects.
 	// Optional if only one BalancerPort is defined on this service.

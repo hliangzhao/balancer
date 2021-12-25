@@ -19,7 +19,7 @@ package balancer
 import (
 	"context"
 	`fmt`
-	balancerv1alpha1 "github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1"
+	exposerv1alpha1 "github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1"
 	"github.com/hliangzhao/balancer/pkg/controllers/balancer/nginx"
 	`hash/fnv`
 	corev1 "k8s.io/api/core/v1"
@@ -32,7 +32,7 @@ import (
 )
 
 // NewConfigMap creates a new configmap for the input Balancer instance.
-func NewConfigMap(balancer *balancerv1alpha1.Balancer) (*corev1.ConfigMap, error) {
+func NewConfigMap(balancer *exposerv1alpha1.Balancer) (*corev1.ConfigMap, error) {
 	return &corev1.ConfigMap{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      ConfigMapName(balancer),
@@ -45,7 +45,7 @@ func NewConfigMap(balancer *balancerv1alpha1.Balancer) (*corev1.ConfigMap, error
 }
 
 // syncConfigMap sync the configmap that created by the deployment of Balancer.
-func (r *ReconcilerBalancer) syncConfigMap(balancer *balancerv1alpha1.Balancer) (*corev1.ConfigMap, error) {
+func (r *ReconcilerBalancer) syncConfigMap(balancer *exposerv1alpha1.Balancer) (*corev1.ConfigMap, error) {
 	cm, err := NewConfigMap(balancer)
 	if err != nil {
 		return nil, err
@@ -76,7 +76,7 @@ func (r *ReconcilerBalancer) syncConfigMap(balancer *balancerv1alpha1.Balancer) 
 	return cm, nil
 }
 
-func ConfigMapName(balancer *balancerv1alpha1.Balancer) string {
+func ConfigMapName(balancer *exposerv1alpha1.Balancer) string {
 	return balancer.Name + "-proxy-configmap"
 }
 

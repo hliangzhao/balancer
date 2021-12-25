@@ -18,7 +18,7 @@ package balancer
 
 import (
 	"context"
-	balancerv1alpha1 "github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1"
+	exposerv1alpha1 "github.com/hliangzhao/balancer/pkg/apis/balancer/v1alpha1"
 	appv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -27,7 +27,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 
-func (r *ReconcilerBalancer) syncDeployment(balancer *balancerv1alpha1.Balancer) error {
+func (r *ReconcilerBalancer) syncDeployment(balancer *exposerv1alpha1.Balancer) error {
 	// firstly, we sync configmap
 	cm, err := r.syncConfigMap(balancer)
 	if err != nil {
@@ -40,7 +40,7 @@ func (r *ReconcilerBalancer) syncDeployment(balancer *balancerv1alpha1.Balancer)
 		return err
 	}
 	annotations := map[string]string{
-		balancerv1alpha1.ConfigMapHashKey: ConfigMapHash(cm),
+		exposerv1alpha1.ConfigMapHashKey: ConfigMapHash(cm),
 	}
 	// always use the newest annotations
 	dp.Spec.Template.ObjectMeta.Annotations = annotations
@@ -71,7 +71,7 @@ func (r *ReconcilerBalancer) syncDeployment(balancer *balancerv1alpha1.Balancer)
 }
 
 // NewDeployment creates a new deployment (which controls one nginx pod) for the Balancer.
-func NewDeployment(balancer *balancerv1alpha1.Balancer) (*appv1.Deployment, error) {
+func NewDeployment(balancer *exposerv1alpha1.Balancer) (*appv1.Deployment, error) {
 	replicas := int32(1)
 	labels := NewPodLabels(balancer)
 	nginxContainer := corev1.Container{
@@ -118,6 +118,6 @@ func NewDeployment(balancer *balancerv1alpha1.Balancer) (*appv1.Deployment, erro
 	}, nil
 }
 
-func DeploymentName(balancer *balancerv1alpha1.Balancer) string {
+func DeploymentName(balancer *exposerv1alpha1.Balancer) string {
 	return balancer.Name + "proxy"
 }
