@@ -63,6 +63,11 @@ spec:
                   description: BalancerPort contains the endpoints and exposed ports.
                   properties:
                     name:
+                      description: The name of this port within the balancer. This
+                        must be a DNS_LABEL. All ports within a ServiceSpec must have
+                        unique names. This maps to the 'Name' field in EndpointPort
+                        objects. Optional if only one BalancerPort is defined on this
+                        service.
                       type: string
                     port:
                       description: the port that will be exposed by the balancer

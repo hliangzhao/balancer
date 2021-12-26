@@ -11,9 +11,9 @@ spec:
     - name: echo
       image: hashicorp/http-echo
       command: [ "/http-echo" ]
-        args: [ "-text", "hello world v1" ]
-        ports:
-          - containerPort: 5678
+      args: [ "-text", "hello world v1" ]
+      ports:
+        - containerPort: 5678
 ---
 apiVersion: v1
 kind: Pod

@@ -50,8 +50,9 @@ func (r *ReconcilerBalancer) syncBalancerStatus(balancer *exposerv1alpha1.Balanc
 	}
 
 	// status updating is required (note the assignment direction is opposite!)
-	balancer.Status = actualStatus
-	return r.client.Status().Update(context.Background(), balancer)
+	newBalancer := balancer
+	newBalancer.Status = actualStatus
+	return r.client.Status().Update(context.Background(), newBalancer)
 }
 
 // syncBackendServices creates and delete backend services according to groupBackendServers result.
@@ -69,7 +70,12 @@ func (r *ReconcilerBalancer) syncBackendServices(balancer *exposerv1alpha1.Balan
 	// start coroutines to delete services-to-be-deleted
 	deleteErrCh := make(chan error, len(backendServicesToDelete))
 	wg.Add(len(backendServicesToDelete))
-	for _, svcToDelete := range backendServicesToDelete {
+	// This will cause error!
+	// for _, svcToDelete := range backendServicesToDelete {
+	// 	...
+	// }
+	for i := range backendServicesToDelete {
+		svcToDelete := backendServicesToDelete[i]
 		go func(svc *corev1.Service) {
 			defer wg.Done()
 			if err := r.client.Delete(context.Background(), svc); err != nil {
@@ -82,7 +88,12 @@ func (r *ReconcilerBalancer) syncBackendServices(balancer *exposerv1alpha1.Balan
 	// start coroutines to create services-to-be-created
 	createErrCh := make(chan error, len(backendServicesToCreate))
 	wg.Add(len(backendServicesToCreate))
-	for _, svcToCreate := range backendServicesToCreate {
+	// This will cause error!
+	// for _, svcToCreate := range backendServicesToCreate {
+	// 	...
+	// }
+	for i := range backendServicesToCreate {
+		svcToCreate := backendServicesToCreate[i]
 		go func(svc *corev1.Service) {
 			defer wg.Done()
 
@@ -96,8 +107,11 @@ func (r *ReconcilerBalancer) syncBackendServices(balancer *exposerv1alpha1.Balan
 			foundSvc := &corev1.Service{}
 			err := r.client.Get(context.Background(), types.NamespacedName{Namespace: svc.Namespace, Name: svc.Name}, foundSvc)
 			if err != nil && errors.IsNotFound(err) {
-				if err = r.client.Create(context.Background(), svc); err != nil {
+				err = r.client.Create(context.Background(), svc)
+				if err != nil {
 					createErrCh <- err
+				} else {
+					log.Info("Sync Backend Services", svc.Name, "created")
 				}
 				return
 			} else if err != nil {
@@ -107,10 +121,13 @@ func (r *ReconcilerBalancer) syncBackendServices(balancer *exposerv1alpha1.Balan
 
 			foundSvc.Spec.Ports = svc.Spec.Ports
 			foundSvc.Spec.Selector = svc.Spec.Selector
-			if err = r.client.Update(context.Background(), svc); err != nil {
+			err = r.client.Update(context.Background(), foundSvc)
+			if err != nil {
 				createErrCh <- err
-				return
+			} else {
+				log.Info("Sync Backend Services", foundSvc.Name, "updated")
 			}
+			return
 		}(&svcToCreate)
 	}
 	wg.Wait()
