@@ -57,6 +57,7 @@ func (r *ReconcilerBalancer) syncDeployment(balancer *exposerv1alpha1.Balancer) 
 		if err = r.client.Create(context.Background(), dp); err != nil {
 			return err
 		}
+		log.Info("Sync Deployment", dp.Name, "created")
 		return nil
 	} else if err != nil {
 		return err
@@ -67,6 +68,7 @@ func (r *ReconcilerBalancer) syncDeployment(balancer *exposerv1alpha1.Balancer) 
 	if err = r.client.Update(context.Background(), foundDp); err != nil {
 		return err
 	}
+	log.Info("Sync Deployment", foundDp.Name, "updated")
 	return nil
 }
 

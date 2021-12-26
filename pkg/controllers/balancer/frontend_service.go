@@ -45,6 +45,7 @@ func (r *ReconcilerBalancer) syncFrontendService(balancer *exposerv1alpha1.Balan
 		if err = r.client.Create(context.Background(), svc); err != nil {
 			return err
 		}
+		log.Info("Sync Frontend Service", svc.Name, "created")
 		return nil
 	} else if err != nil {
 		return err
@@ -56,6 +57,7 @@ func (r *ReconcilerBalancer) syncFrontendService(balancer *exposerv1alpha1.Balan
 	if err = r.client.Update(context.Background(), foundSvc); err != nil {
 		return err
 	}
+	log.Info("Sync Frontend Service", foundSvc.Name, "updated")
 	return nil
 }
 
