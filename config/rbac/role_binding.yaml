@@ -1,12 +1,14 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
+  # bind the ClusterRole manager-role with the ServiceAccount controller-manager, which gives controller-manager
+  # the ability of operating core & apps & exposer.hliangzhao.io resources
   name: manager-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: manager-role
 subjects:
-- kind: ServiceAccount
-  name: controller-manager
-  namespace: system
+  - kind: ServiceAccount
+    name: controller-manager
+    namespace: system

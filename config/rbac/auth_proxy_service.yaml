@@ -3,13 +3,14 @@ kind: Service
 metadata:
   labels:
     control-plane: controller-manager
+  # create a Service controller-manager-metrics-service to expose the monitoring metrics of controller-manager
   name: controller-manager-metrics-service
   namespace: system
 spec:
   ports:
-  - name: https
-    port: 8443
-    protocol: TCP
-    targetPort: https
+    - name: https
+      port: 8443
+      protocol: TCP
+      targetPort: https
   selector:
     control-plane: controller-manager

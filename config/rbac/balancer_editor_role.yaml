@@ -2,23 +2,24 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
+  # create a ClusterRole balancer-editor-role who has the ability to edit Balancer resources
   name: balancer-editor-role
 rules:
-- apiGroups:
-  - exposer.hliangzhao.io
-  resources:
-  - balancers
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - exposer.hliangzhao.io
-  resources:
-  - balancers/status
-  verbs:
-  - get
+  - apiGroups:
+      - exposer.hliangzhao.io
+    resources:
+      - balancers
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - exposer.hliangzhao.io
+    resources:
+      - balancers/status
+    verbs:
+      - get

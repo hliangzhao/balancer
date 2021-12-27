@@ -94,6 +94,17 @@ func Add(manager manager.Manager) error {
 // se doesn't take any process space.
 var _ reconcile.Reconciler = &ReconcilerBalancer{}
 
+// NOTE: if we do not add the following tags, the ClusterRole manager-role (config/rbac/role.yaml) will not be created!
+// +kubebuilder:rbac:groups=exposer.hliangzhao.io,resources=balancers,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=exposer.hliangzhao.io,resources=balancers/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=apps,resources=replicasets,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;watch;create;
+// +kubebuilder:rbac:groups=core,resources=services,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=core,resources=configmaps,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=core,resources=serviceaccounts,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=core,resources=replicasets,verbs=get;list;watch;create;update;patch;delete
+
 // Reconcile reads the status of the Balancer object and makes changes toward to Balancer.Spec.
 // This func must be implemented to be a legal reconcile.Reconciler!
 func (r *ReconcilerBalancer) Reconcile(context context.Context, request reconcile.Request) (reconcile.Result, error) {

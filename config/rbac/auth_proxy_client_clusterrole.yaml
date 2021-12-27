@@ -1,9 +1,10 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
+  # create a ClusterRole metrics-reader who can visit the "/metrics" url
   name: metrics-reader
 rules:
-- nonResourceURLs:
-  - "/metrics"
-  verbs:
-  - get
+  - nonResourceURLs:
+      - "/metrics"
+    verbs:
+      - get

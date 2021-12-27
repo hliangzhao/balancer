@@ -2,19 +2,20 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
+  # create a ClusterRole balancer-viewer-role who only has the ability to view Balancer resources
   name: balancer-viewer-role
 rules:
-- apiGroups:
-  - exposer.hliangzhao.io
-  resources:
-  - balancers
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - exposer.hliangzhao.io
-  resources:
-  - balancers/status
-  verbs:
-  - get
+  - apiGroups:
+      - exposer.hliangzhao.io
+    resources:
+      - balancers
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - exposer.hliangzhao.io
+    resources:
+      - balancers/status
+    verbs:
+      - get

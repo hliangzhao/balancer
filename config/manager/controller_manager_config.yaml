@@ -1,5 +1,6 @@
 apiVersion: controller-runtime.sigs.k8s.io/v1alpha1
 kind: ControllerManagerConfig
+# the configuration of controller-manager, which configs the health probe address, metrics address, webhook address, and enabling leader election or not
 health:
   healthProbeBindAddress: :8081
 metrics:

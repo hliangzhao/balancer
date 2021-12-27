@@ -27,8 +27,8 @@ spec:
   containers:
     - name: echo
       image: hashicorp/http-echo
-      command: ["/http-echo"]
-      args: ["-text", "hello world v2"]
+      command: [ "/http-echo" ]
+      args: [ "-text", "hello world v2" ]
       ports:
         - containerPort: 5678
 ---
@@ -44,7 +44,7 @@ spec:
   containers:
     - name: echo
       image: hashicorp/http-echo
-      command: ["/http-echo"]
-      args: ["-text", "hello world v3"]
+      command: [ "/http-echo" ]
+      args: [ "-text", "hello world v3" ]
       ports:
         - containerPort: 5678

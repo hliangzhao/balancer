@@ -1,17 +1,20 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
+  # create a ClusterRole proxy-role who can authenticate a user/group
   name: proxy-role
 rules:
-- apiGroups:
-  - authentication.k8s.io
-  resources:
-  - tokenreviews
-  verbs:
-  - create
-- apiGroups:
-  - authorization.k8s.io
-  resources:
-  - subjectaccessreviews
-  verbs:
-  - create
+  - apiGroups:
+      - authentication.k8s.io
+    resources:
+      # TokenReview attempts to authenticate a token to a known user
+      - tokenreviews
+    verbs:
+      - create
+  - apiGroups:
+      - authorization.k8s.io
+    resources:
+      # SubjectAccessReview checks whether a user or group can perform an action
+      - subjectaccessreviews
+    verbs:
+      - create
